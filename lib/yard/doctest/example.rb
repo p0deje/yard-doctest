@@ -2,17 +2,20 @@ require 'sourcify'
 
 module YARD
   module Doctest
+    #
+    # Base class implementing test.
+    #
+    # There are a bunch of hacks happening here:
+    #
+    #   1. Everything is done within constructor.
+    #   2. Context (binding) is shared between helper, example and hooks.
+    #   3. Since hooks are blocks, they can't be passed to `#eval`,
+    #      so we translate them into string of Ruby code.
+    #   4. Intercept exception backtrace and add example object definition path.
+    #
+    # @api private
+    #
     class Example
-
-      #
-      # There are a bunch of hacks happening here:
-      #
-      #   1. Everything is done within constructor.
-      #   2. Context (binding) is shared between helper, example and hooks.
-      #   3. Since hooks are blocks, they can't be passed to `#eval`,
-      #      so we translate them into string of Ruby code.
-      #   4. Intercept exception backtrace and add example object definition path.
-      #
 
       def initialize(path, file, name, asserts, hooks)
         Object.instance_eval do

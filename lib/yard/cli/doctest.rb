@@ -6,6 +6,13 @@ module YARD
         'Doctests from @example tags'
       end
 
+      #
+      # Runs the command line, parsing arguments
+      # and generating tests.
+      #
+      # @param [Array<String>] args Switches are passed to minitest,
+      #   everything else is treated as the list of directories/files or glob
+      #
       def run(*args)
         files = args.select { |arg| arg !~ /^-/ }
 
