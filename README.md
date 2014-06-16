@@ -9,7 +9,7 @@ Meet `YARD::Doctest` - simple and magical gem, which automatically parses your `
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'yardoctest'
+gem 'yard-doctest'
 ```
 
 And then execute:
