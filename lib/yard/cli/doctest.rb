@@ -20,7 +20,6 @@ module YARD
         examples = parse_examples(files)
 
         add_pwd_to_path
-        require_helper
 
         generate_tests(examples)
       end
@@ -78,10 +77,6 @@ module YARD
 
       def add_pwd_to_path
         $LOAD_PATH.unshift(Dir.pwd) unless $LOAD_PATH.include?(Dir.pwd)
-      end
-
-      def require_helper
-        require 'yard-doctest_helper'
       end
 
     end # Doctest
