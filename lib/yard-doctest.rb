@@ -1,5 +1,6 @@
 require 'yard'
 require 'minitest'
+require 'minitest/spec'
 
 require 'yard/cli/doctest'
 require 'yard/doctest/example'

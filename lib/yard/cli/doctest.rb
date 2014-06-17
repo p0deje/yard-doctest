@@ -22,12 +22,7 @@ module YARD
         add_pwd_to_path
         require_helper
 
-        hooks = {}.tap do |hash|
-          hash[:before] = YARD::Doctest.before if YARD::Doctest.before.is_a?(Proc)
-          hash[:after] = YARD::Doctest.after if YARD::Doctest.after.is_a?(Proc)
-        end
-
-        generate_tests(examples, hooks)
+        generate_tests(examples)
       end
 
       private
@@ -52,11 +47,8 @@ module YARD
         registry.all.map { |object| object.tags(:example) }.flatten
       end
 
-      def generate_tests(examples, hooks)
+      def generate_tests(examples)
         examples.each do |example|
-          path = example.object.path
-          file = "#{Dir.pwd}/#{example.object.files.first.join(':')}"
-          name = example.name
           text = example.text
 
           text = text.gsub('# =>', '#=>')
@@ -76,7 +68,11 @@ module YARD
             end
           end
 
-          YARD::Doctest::Example.new(path, file, name, asserts, hooks)
+          spec = YARD::Doctest::Example.new(example.name)
+          spec.definition = example.object.path
+          spec.filepath = "#{Dir.pwd}/#{example.object.files.first.join(':')}"
+          spec.asserts = asserts
+          spec.generate
         end
       end
 

@@ -2,53 +2,67 @@ require 'sourcify'
 
 module YARD
   module Doctest
-    #
-    # Base class implementing test.
-    #
-    # There are a bunch of hacks happening here:
-    #
-    #   1. Everything is done within constructor.
-    #   2. Context (binding) is shared between helper, example and hooks.
-    #   3. Since hooks are blocks, they can't be passed to `#eval`,
-    #      so we translate them into string of Ruby code.
-    #   4. Intercept exception backtrace and add example object definition path.
-    #
-    # @api private
-    #
-    class Example
+    class Example < ::Minitest::Spec
 
-      def initialize(path, file, name, asserts, hooks)
-        Object.instance_eval do
-          context = binding
+      # @return [String] namespace path of example (e.g. `Foo#bar`)
+      attr_accessor :definition
 
+      # @return [String] filepath to definition (e.g. `app/app.rb:10`)
+      attr_accessor :filepath
+
+      # @return [Array<Hash>] assertions to be done
+      attr_accessor :asserts
+
+      #
+      # Generates a spec and registers it to Minitest runner.
+      #
+      def generate
+        this = self
+
+        Class.new(this.class).class_eval do
           require 'minitest/autorun'
-          context.eval "require 'yard-doctest_helper'"
+          require 'yard-doctest_helper'
 
-          describe path do
-            before { context.eval(hooks[:before].to_source(strip_enclosure: true)) } if hooks[:before]
-            after { context.eval(hooks[:after].to_source(strip_enclosure: true)) } if hooks[:after]
+          describe this.definition do
+            before { evaluate YARD::Doctest.before } if YARD::Doctest.before.is_a?(Proc)
+            after  { evaluate YARD::Doctest.after  } if YARD::Doctest.after.is_a?(Proc)
 
-            it name do
-              asserts.each do |assert|
+            it this.name do
+              this.asserts.each do |assert|
                 expected, actual = assert[:expected], assert[:actual]
                 actual = context.eval(actual)
 
                 unless expected.empty?
                   begin
-                    assert_equal context.eval(expected), actual
-                  rescue Minitest::Assertion => e
-                    backtrace = e.backtrace
-                    example = backtrace.find { |trace| trace =~ %r(lib/yard/doctest/example) }
-                    example = backtrace.index(example)
-                    backtrace = backtrace.insert(example, file)
-                    e.set_backtrace backtrace
-                    raise e
+                    assert_equal evaluate(expected), actual
+                  rescue Minitest::Assertion => error
+                    add_filepath_to_backtrace(error, this.filepath)
+                    raise error
                   end
                 end
               end
             end
           end
         end
+      end
+
+      protected
+
+      def evaluate(code)
+        code = code.to_source(strip_enclosure: true) if code.is_a?(Proc)
+        context.eval(code)
+      end
+
+      def context
+        @binding ||= binding
+      end
+
+      def add_filepath_to_backtrace(exception, filepath)
+        backtrace = exception.backtrace
+        line = backtrace.find { |line| line =~ %r(lib/yard/doctest/example) }
+        index = backtrace.index(line)
+        backtrace = backtrace.insert(index, filepath)
+        exception.set_backtrace backtrace
       end
 
     end # Example
