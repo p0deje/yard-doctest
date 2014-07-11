@@ -397,24 +397,14 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain "NameError: undefined local variable or method `a'"
 
-  Scenario: supports hooks
+  Scenario: supports global hooks
     Given a file named "yard-doctest_helper.rb" with:
       """
       require 'app/app'
 
-      @flag = true
-
-      YARD::Doctest.before do
-        @flag = false
-      end
-
-      YARD::Doctest.after do
-        @flag = true
-      end
-
-      YARD::Doctest.after_run do
-        puts 'Run after all by minitest'
-      end
+      YARD::Doctest.before { @flag = false  }
+      YARD::Doctest.after { @flag = true  }
+      YARD::Doctest.after_run { puts 'Run after all by minitest' }
       """
     And a file named "app/app.rb" with:
       """
@@ -427,3 +417,35 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
     And the output should contain "Run after all by minitest"
+
+  Scenario: supports test-name hooks
+    Given a file named "yard-doctest_helper.rb" with:
+      """
+      require 'app/app'
+
+      YARD::Doctest.before do
+        @flag = true
+        @foo = true
+      end
+
+      YARD::Doctest.before('#flag') do
+        @flag = false
+        @foo = false
+      end
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   flag #=> false
+      def flag
+        @flag && @foo
+      end
+
+      # @example
+      #   foo #=> true
+      def foo
+        @foo && @flag
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"

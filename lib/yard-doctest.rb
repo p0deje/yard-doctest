@@ -12,23 +12,29 @@ module YARD
 
     class << self
       #
-      # Passed block called before each example and
-      # evaluated in the same context as example.
+      # Passed block called before each example
+      # or specific tests based on passed name.
       #
+      # It is evaluated in the same context as example.
+      #
+      # @param [String] test
       # @param [Proc] blk
       #
-      def before(&blk)
-        block_given? ? @before = blk : @before
+      def before(test = nil, &blk)
+        hooks[:before] << {test: test, block: blk} if block_given?
       end
 
       #
-      # Passed block called after each example and
-      # evaluated in the same context as example.
+      # Passed block called after each example
+      # or specific tests based on passed name.
       #
+      # It is evaluated in the same context as example.
+      #
+      # @param [String] test
       # @param [Proc] blk
       #
-      def after(&blk)
-        block_given? ? @after = blk : @after
+      def after(test = nil, &blk)
+        hooks[:after] << {test: test, block: blk} if block_given?
       end
 
       #
@@ -41,6 +47,16 @@ module YARD
       #
       def after_run(&blk)
         Minitest.after_run &blk
+      end
+
+      #
+      # Returns hash with arrays of before/after hooks.
+      # @api private
+      #
+      def hooks
+        @hooks ||= {}.tap do |hash|
+          hash[:before], hash[:after] = [], []
+        end
       end
     end
 

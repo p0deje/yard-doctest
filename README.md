@@ -195,6 +195,8 @@ It is actually delegated to amazing [minitest](https://github.com/seattlerb/mini
 
 ## Advanced usage
 
+### Test helper
+
 You can define any methods and instance variables in test helper and they will be available in examples.
 
 For example, if we change the examples for `Cat#can_hunt_dogs?` like that:
@@ -233,6 +235,8 @@ def cat
 end
 ```
 
+### Hooks
+
 In case you need to do some preparations/cleanup between tests, hooks are at your service to be defined in test helper:
 
 ```ruby
@@ -252,6 +256,21 @@ YARD::Doctest.after_run do
   # (i.e. no access to instance variables)
 end
 ```
+
+There is also a way to limit hooks to specific tests based on class/method name:
+
+```ruby
+YARD::Doctest.before('MyClass') do
+  # this will only be called for doctests of `MyClass` class
+  # and all its methods (i.e. `MyClass.foo`, `MyClass#bar`)
+end
+
+YARD::Doctest.after('MyClass#foo') do
+  # this will only be called for doctests of `MyClass#foo`
+end
+```
+
+### Rake
 
 There is also a Rake task for you:
 

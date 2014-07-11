@@ -24,8 +24,7 @@ module YARD
           require 'yard-doctest_helper'
 
           describe this.definition do
-            before { evaluate YARD::Doctest.before } if YARD::Doctest.before.is_a?(Proc)
-            after  { evaluate YARD::Doctest.after  } if YARD::Doctest.after.is_a?(Proc)
+            register_hooks(this.definition, YARD::Doctest.hooks)
 
             it this.name do
               this.asserts.each do |assert|
@@ -59,10 +58,26 @@ module YARD
 
       def add_filepath_to_backtrace(exception, filepath)
         backtrace = exception.backtrace
-        line = backtrace.find { |line| line =~ %r(lib/yard/doctest/example) }
+        line = backtrace.find { |l| l =~ %r(lib/yard/doctest/example) }
         index = backtrace.index(line)
         backtrace = backtrace.insert(index, filepath)
         exception.set_backtrace backtrace
+      end
+
+      def self.register_hooks(definition, all_hooks)
+        all_hooks.each do |type, hooks|
+          hooks.each do |hook|
+            if hook[:test]
+              # test-name hooks
+              if definition.include?(hook[:test])
+                send(type) { evaluate(hook[:block]) }
+              end
+            else
+              # global hooks
+              send(type) { evaluate(hook[:block]) }
+            end
+          end
+        end
       end
 
     end # Example
