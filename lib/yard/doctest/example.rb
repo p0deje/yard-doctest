@@ -23,20 +23,22 @@ module YARD
           require 'minitest/autorun'
           require 'yard-doctest_helper'
 
-          describe this.definition do
-            register_hooks(this.definition, YARD::Doctest.hooks)
+          unless YARD::Doctest.skips.any? { |skip| this.definition.include?(skip) }
+            describe this.definition do
+              register_hooks(this.definition, YARD::Doctest.hooks)
 
-            it this.name do
-              this.asserts.each do |assert|
-                expected, actual = assert[:expected], assert[:actual]
-                actual = context.eval(actual)
+              it this.name do
+                this.asserts.each do |assert|
+                  expected, actual = assert[:expected], assert[:actual]
+                  actual = context.eval(actual)
 
-                unless expected.empty?
-                  begin
-                    assert_equal evaluate(expected), actual
-                  rescue Minitest::Assertion => error
-                    add_filepath_to_backtrace(error, this.filepath)
-                    raise error
+                  unless expected.empty?
+                    begin
+                      assert_equal evaluate(expected), actual
+                    rescue Minitest::Assertion => error
+                      add_filepath_to_backtrace(error, this.filepath)
+                      raise error
+                    end
                   end
                 end
               end

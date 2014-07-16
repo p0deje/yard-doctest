@@ -270,6 +270,15 @@ YARD::Doctest.after('MyClass#foo') do
 end
 ```
 
+### Skip
+
+You can skip running some of the tests:
+
+```ruby
+YARD::Doctest.skip 'MyClass' # will skip doctests for `MyClass` and all its methods
+YARD::Doctest.skip 'MyClass#foo' # will skip doctests for `MyClass#foo`
+```
+
 ### Rake
 
 There is also a Rake task for you:

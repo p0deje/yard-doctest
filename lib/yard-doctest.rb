@@ -50,6 +50,23 @@ module YARD
       end
 
       #
+      # Adds definition of test to be skipped.
+      #
+      # @param [Array<String>] test
+      #
+      def skip(test)
+        skips << test
+      end
+
+      #
+      # Array of tests to be skipped.
+      # @api private
+      #
+      def skips
+        @skips ||= []
+      end
+
+      #
       # Returns hash with arrays of before/after hooks.
       # @api private
       #

@@ -449,3 +449,30 @@ Feature: yard doctest
       """
     When I run `bundle exec yard doctest`
     Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
+
+  Scenario: can skip tests
+    Given a file named "yard-doctest_helper.rb" with:
+      """
+      require 'app/app'
+
+      YARD::Doctest.skip '#flag'
+      YARD::Doctest.skip 'A.foo'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   flag #=> false
+      def flag
+        @flag
+      end
+
+      class A
+        # @example
+        #   A.foo => true
+        def self.foo
+          true
+        end
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "0 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
