@@ -455,8 +455,10 @@ Feature: yard doctest
       """
       require 'app/app'
 
-      YARD::Doctest.skip '#flag'
-      YARD::Doctest.skip 'A.foo'
+      YARD::Doctest.configure do |doctest|
+        doctest.skip '#flag'
+        doctest.skip 'A.foo'
+      end
       """
     And a file named "app/app.rb" with:
       """

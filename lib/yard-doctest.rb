@@ -12,6 +12,15 @@ module YARD
 
     class << self
       #
+      # Configures YARD doctest.
+      #
+      # @yield [self]
+      #
+      def configure
+        yield self
+      end
+
+      #
       # Passed block called before each example
       # or specific tests based on passed name.
       #

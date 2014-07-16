@@ -240,33 +240,37 @@ end
 In case you need to do some preparations/cleanup between tests, hooks are at your service to be defined in test helper:
 
 ```ruby
-YARD::Doctest.before do
-  # this is called before each example and
-  # evaluated in the same context as example
-  # (i.e. has access to the same instance variables)
-end
+YARD::Doctest.configure do |doctest|
+  doctest.before do
+    # this is called before each example and
+    # evaluated in the same context as example
+    # (i.e. has access to the same instance variables)
+  end
 
-YARD::Doctest.after do
-  # same as `before`, but runs after each example
-end
+  doctest.after do
+    # same as `before`, but runs after each example
+  end
 
-YARD::Doctest.after_run do
-  # runs after all the examples and
-  # has different context
-  # (i.e. no access to instance variables)
+  doctest.after_run do
+    # runs after all the examples and
+    # has different context
+    # (i.e. no access to instance variables)
+  end
 end
 ```
 
 There is also a way to limit hooks to specific tests based on class/method name:
 
 ```ruby
-YARD::Doctest.before('MyClass') do
-  # this will only be called for doctests of `MyClass` class
-  # and all its methods (i.e. `MyClass.foo`, `MyClass#bar`)
-end
+YARD::Doctest.configure do |doctest|
+  doctest.before('MyClass') do
+    # this will only be called for doctests of `MyClass` class
+    # and all its methods (i.e. `MyClass.foo`, `MyClass#bar`)
+  end
 
-YARD::Doctest.after('MyClass#foo') do
-  # this will only be called for doctests of `MyClass#foo`
+  doctest.after('MyClass#foo') do
+    # this will only be called for doctests of `MyClass#foo`
+  end
 end
 ```
 
@@ -275,8 +279,10 @@ end
 You can skip running some of the tests:
 
 ```ruby
-YARD::Doctest.skip 'MyClass' # will skip doctests for `MyClass` and all its methods
-YARD::Doctest.skip 'MyClass#foo' # will skip doctests for `MyClass#foo`
+YARD::Doctest.configure do |doctest|
+  doctest.skip 'MyClass' # will skip doctests for `MyClass` and all its methods
+  doctest.skip 'MyClass#foo' # will skip doctests for `MyClass#foo`
+end
 ```
 
 ### Rake
