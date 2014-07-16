@@ -21,7 +21,7 @@ module YARD
 
         Class.new(this.class).class_eval do
           require 'minitest/autorun'
-          require 'yard-doctest_helper'
+          require 'doctest_helper'
 
           unless YARD::Doctest.skips.any? { |skip| this.definition.include?(skip) }
             describe this.definition do

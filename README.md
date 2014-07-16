@@ -98,11 +98,11 @@ $ bundle exec yard config -a autoload_plugins yard-doctest
 Next, you'll need to create test helper, which will be required before each of your test. Think about it as `spec_helper.rb` in RSpec or `env.rb` in Cucumber. You should require everything necessary for your examples to run there.
 
 ```bash
-$ touch yard-doctest_helper.rb
+$ touch doctest_helper.rb
 ```
 
 ```ruby
-# yard-doctest_helper.rb
+# doctest_helper.rb
 require 'lib/cat'
 require 'lib/dog'
 ```
@@ -226,7 +226,7 @@ NameError: undefined local variable or method `cat' for Object:Class
 If you don't want to create new instance of class each time (or include module if you're testing it), you can fix this by defining a method in test helper:
 
 ```ruby
-# yard-doctest_helper.rb
+# doctest_helper.rb
 require 'lib/cat'
 require 'lib/dog'
 

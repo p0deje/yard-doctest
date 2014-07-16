@@ -11,7 +11,7 @@ Feature: yard doctest
     Then the output should contain "doctest  Doctests from @example tags"
 
   Scenario: looks for files in app/lib directories by default
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       require 'lib/lib'
@@ -36,7 +36,7 @@ Feature: yard doctest
     Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario Outline: looks for files only in passed glob
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       require 'lib/lib'
@@ -68,7 +68,7 @@ Feature: yard doctest
       | app/app.rb  |
 
   Scenario: generates test names from unit name
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -109,7 +109,7 @@ Feature: yard doctest
     And the output should contain "B#div"
 
   Scenario: asserts using equality
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -129,7 +129,7 @@ Feature: yard doctest
       """
 
   Scenario Outline: properly handles different return values
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -159,7 +159,7 @@ Feature: yard doctest
       | 1.0   |
 
   Scenario: handles multiple @example tags
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -177,7 +177,7 @@ Feature: yard doctest
     Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: handles multiple return comments
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -195,7 +195,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: runs @example tags without return comment
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -211,7 +211,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: handles `# =>` return comment
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -227,7 +227,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: handles return comment on newline
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -244,7 +244,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: handles multiple lines
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -263,7 +263,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: names test with example title when it's present
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -279,7 +279,7 @@ Feature: yard doctest
     Then the output should contain "#sum#test_0001_sums two numbers"
 
   Scenario: doesn't name test when title is not present
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -295,7 +295,7 @@ Feature: yard doctest
     Then the output should contain "#sum#test_0001_"
 
   Scenario: adds unit definition to backtrace on failures
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -311,7 +311,7 @@ Feature: yard doctest
     Then the output should contain "app/app.rb:3"
 
   Scenario: has rake task to run the tests
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -335,7 +335,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: requires doctest helper
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
 
@@ -359,7 +359,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: shares binding between asserts
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -378,7 +378,7 @@ Feature: yard doctest
     Then the output should contain "1 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: does not share binding between examples
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
       """
@@ -398,7 +398,7 @@ Feature: yard doctest
     Then the output should contain "NameError: undefined local variable or method `a'"
 
   Scenario: supports global hooks
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
 
@@ -419,7 +419,7 @@ Feature: yard doctest
     And the output should contain "Run after all by minitest"
 
   Scenario: supports test-name hooks
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
 
@@ -451,7 +451,7 @@ Feature: yard doctest
     Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: can skip tests
-    Given a file named "yard-doctest_helper.rb" with:
+    Given a file named "doctest_helper.rb" with:
       """
       require 'app/app'
 
