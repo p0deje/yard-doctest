@@ -332,7 +332,29 @@ Feature: yard doctest
       end
       """
     When I run `bundle exec rake yard:doctest`
-    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+    Then the exit status should be 0
+    And the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+
+  Scenario: propagates exit code to rake task
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   sum(2, 2) #=> 5
+      def sum(one, two)
+        one + two
+      end
+      """
+    And a file named "Rakefile" with:
+      """
+      require 'yard-doctest'
+      YARD::Doctest::RakeTask.new
+      """
+    When I run `bundle exec rake yard:doctest`
+    Then the exit status should be 1
 
   Scenario: requires doctest helper
     Given a file named "doctest_helper.rb" with:

@@ -30,7 +30,7 @@ module YARD
         desc 'Run YARD doctests'
         task(name) do
           command = "yard doctest #{(doctest_opts << pattern).join(' ')}"
-          system(command)
+          exit system(command)
         end
       end
 
