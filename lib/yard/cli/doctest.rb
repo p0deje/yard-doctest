@@ -51,6 +51,7 @@ module YARD
           text = example.text
 
           text = text.gsub('# =>', '#=>')
+          text = text.gsub("\n#=>", ' #=>')
           text = text.gsub('#=>', "\n#=>")
           lines = text.split("\n").map(&:strip).reject(&:empty?)
 
