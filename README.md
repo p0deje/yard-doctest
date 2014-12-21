@@ -99,6 +99,8 @@ Next, you'll need to create test helper, which will be required before each of y
 
 ```bash
 $ touch doctest_helper.rb
+# or if you don't want to have it in root
+$ touch support/doctest_helper.rb
 ```
 
 ```ruby
