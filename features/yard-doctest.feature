@@ -356,8 +356,8 @@ Feature: yard doctest
     When I run `bundle exec rake yard:doctest`
     Then the exit status should be 1
 
-  Scenario: requires doctest helper
-    Given a file named "doctest_helper.rb" with:
+  Scenario Outline: requires doctest helper
+    Given a file named "<directory>/doctest_helper.rb" with:
       """
       require 'app/app'
 
@@ -379,6 +379,10 @@ Feature: yard doctest
       """
     When I run `bundle exec yard doctest`
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+    Examples:
+      | directory |
+      | .         |
+      | support   |
 
   Scenario: shares binding between asserts
     Given a file named "doctest_helper.rb" with:
