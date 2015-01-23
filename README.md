@@ -304,6 +304,10 @@ end
 $ bundle exec rake yard:doctest
 ```
 
+## Is it really used?
+
+Well, yeah. A great example of using yard-doctest is [watir-webdriver](https://github.com/watir/watir-webdriver).
+
 ## Testing
 
 There are some system tests implemented with [Aruba](https://github.com/cucumber/aruba):
