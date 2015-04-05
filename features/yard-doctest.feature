@@ -504,3 +504,24 @@ Feature: yard doctest
       """
     When I run `bundle exec yard doctest`
     Then the output should contain "0 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
+
+  Scenario: can use `assert_raise` in tests
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   assert_raise(StandardError) { divide(1, 0) } #=> true
+      #   assert_raise(ZeroDivisionError) { divide(1, 0) } #=> true
+      #   assert_raise(StandardError) { divide(1, 1) } #=> 'Nothing raised!'
+      #   assert_raise(ScriptError) { divide(1, 0) }
+      #   #=> 'Got #<ZeroDivisionError: divided by 0> raised!'
+      #   assert_raise(ScriptError, StandardError) { divide(1, 0) } #=> true
+      def divide(x, y)
+        x / y
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 5 assertions, 0 failures, 0 errors, 0 skips"

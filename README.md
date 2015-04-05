@@ -197,6 +197,20 @@ It is actually delegated to amazing [minitest](https://github.com/seattlerb/mini
 
 ## Advanced usage
 
+### Test exceptions
+
+If your example is expected to raise an Exception, you can use `assert_raise`:
+
+```ruby
+# @example
+#   assert_raise(ZeroDivisionError) { 1 / 0) } #=> true
+#   assert_raise(StandardError) { 1 / 1) } #=> 'Nothing raised!'
+#   assert_raise(ScriptError, StandardError) { 1 / 1 }#=> true
+#   assert_raise(ScriptError) { 1 / 0 }
+#   #=> 'Got #<ZeroDivisionError: divided by 0> raised!'
+#   assert_raise(ScriptError, StandardError) { 1 / 0 } #=> true
+```
+
 ### Test helper
 
 You can define any methods and instance variables in test helper and they will be available in examples.

@@ -1,4 +1,5 @@
 require 'sourcify'
+require 'yard/doctest/assert_raise'
 
 module YARD
   module Doctest
