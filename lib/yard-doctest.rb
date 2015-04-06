@@ -30,7 +30,7 @@ module YARD
     # @param [Proc] blk
     #
     def before(test = nil, &blk)
-      hooks[:before] << {test: test, block: blk} if block_given?
+      hooks[:before] << {test: test, block: blk}
     end
 
     #
@@ -43,7 +43,7 @@ module YARD
     # @param [Proc] blk
     #
     def after(test = nil, &blk)
-      hooks[:after] << {test: test, block: blk} if block_given?
+      hooks[:after] << {test: test, block: blk}
     end
 
     #

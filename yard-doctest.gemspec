@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'yard'
   spec.add_runtime_dependency 'minitest'
-  spec.add_runtime_dependency 'sourcify'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'

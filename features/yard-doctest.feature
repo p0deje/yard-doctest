@@ -428,9 +428,11 @@ Feature: yard doctest
       """
       require 'app/app'
 
-      YARD::Doctest.before { @flag = false  }
-      YARD::Doctest.after { @flag = true  }
-      YARD::Doctest.after_run { puts 'Run after all by minitest' }
+      YARD::Doctest.configure do |doctest|
+        doctest.before { @flag = false  }
+        doctest.after { @flag = true  }
+        doctest.after_run { puts 'Run after all by minitest' }
+      end
       """
     And a file named "app/app.rb" with:
       """

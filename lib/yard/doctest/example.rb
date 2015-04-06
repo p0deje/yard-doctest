@@ -1,5 +1,3 @@
-require 'sourcify'
-
 module YARD
   module Doctest
     class Example < ::Minitest::Spec
@@ -21,29 +19,26 @@ module YARD
 
         Class.new(this.class).class_eval do
           require 'minitest/autorun'
-          if File.exists?('doctest_helper.rb')
-            require 'doctest_helper'
-          elsif File.exists?('support/doctest_helper.rb')
-            require 'support/doctest_helper'
+
+          %w[. support].each do |dir|
+            require "#{dir}/doctest_helper" if File.exist?("#{dir}/doctest_helper.rb")
           end
 
-          unless YARD::Doctest.skips.any? { |skip| this.definition.include?(skip) }
-            describe this.definition do
-              register_hooks(this.definition, YARD::Doctest.hooks)
+          return if YARD::Doctest.skips.any? { |skip| this.definition.include?(skip) }
+          describe this.definition do
+            register_hooks(this.definition, YARD::Doctest.hooks)
 
-              it this.name do
-                this.asserts.each do |assert|
-                  expected, actual = assert[:expected], assert[:actual]
-                  actual = context.eval(actual)
+            it this.name do
+              this.asserts.each do |assert|
+                expected = assert[:expected]
+                actual = context.eval(assert[:actual])
+                next if expected.empty?
 
-                  unless expected.empty?
-                    begin
-                      assert_equal evaluate(expected), actual
-                    rescue Minitest::Assertion => error
-                      add_filepath_to_backtrace(error, this.filepath)
-                      raise error
-                    end
-                  end
+                begin
+                  assert_equal context.eval(expected), actual
+                rescue Minitest::Assertion => error
+                  add_filepath_to_backtrace(error, this.filepath)
+                  raise error
                 end
               end
             end
@@ -53,18 +48,13 @@ module YARD
 
       protected
 
-      def evaluate(code)
-        code = code.to_source(strip_enclosure: true) if code.is_a?(Proc)
-        context.eval(code)
-      end
-
       def context
         @binding ||= binding
       end
 
       def add_filepath_to_backtrace(exception, filepath)
         backtrace = exception.backtrace
-        line = backtrace.find { |l| l =~ %r(lib/yard/doctest/example) }
+        line = backtrace.find { |l| l =~ %r{lib/yard/doctest/example} }
         index = backtrace.index(line)
         backtrace = backtrace.insert(index, filepath)
         exception.set_backtrace backtrace
@@ -75,12 +65,10 @@ module YARD
           hooks.each do |hook|
             if hook[:test]
               # test-name hooks
-              if definition.include?(hook[:test])
-                send(type) { evaluate(hook[:block]) }
-              end
+              send(type, &hook[:block]) if definition.include?(hook[:test])
             else
               # global hooks
-              send(type) { evaluate(hook[:block]) }
+              send(type, &hook[:block])
             end
           end
         end
