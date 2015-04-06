@@ -128,6 +128,22 @@ Feature: yard doctest
         Actual: "2"
       """
 
+  Scenario: asserts exceptions
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   divide(1, 0) #=> raise ZeroDivisionError, "divided by 0"
+      def divide(one, two)
+        one / two
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+
   Scenario Outline: properly handles different return values
     Given a file named "doctest_helper.rb" with:
       """

@@ -30,12 +30,11 @@ module YARD
 
             it this.name do
               this.asserts.each do |assert|
-                expected = assert[:expected]
-                actual = context.eval(assert[:actual])
+                expected, actual = assert[:expected], assert[:actual]
                 next if expected.empty?
 
                 begin
-                  assert_equal context.eval(expected), actual
+                  assert_equal evaluate(expected), evaluate(actual)
                 rescue Minitest::Assertion => error
                   add_filepath_to_backtrace(error, this.filepath)
                   raise error
@@ -47,6 +46,12 @@ module YARD
       end
 
       protected
+
+      def evaluate(code)
+        context.eval(code)
+      rescue StandardError => error
+        "#<#{error.class}: #{error}>"
+      end
 
       def context
         @binding ||= binding

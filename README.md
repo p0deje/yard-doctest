@@ -197,6 +197,22 @@ It is actually delegated to amazing [minitest](https://github.com/seattlerb/mini
 
 ## Advanced usage
 
+### Exceptions
+
+If you want to use example that raises exception, this can be achieved by specifying the correct expected value:
+
+```ruby
+class Calculator
+  # @example
+  #   divide(1, 0) #=> raise ZeroDivisionError, "divided by 0"
+  def divide(one, two)
+    one / two
+  end
+end
+```
+
+The comparison of raised exceptions is being done by string containing the class and message of exceptions. With that said, you have to use the same message in expected value as the one that is used in actual.
+
 ### Test helper
 
 You can define any methods and instance variables in test helper and they will be available in examples.
