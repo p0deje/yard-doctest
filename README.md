@@ -1,4 +1,4 @@
-# yard-doctest [![Gem Version](https://badge.fury.io/rb/yard-doctest.png)](http://badge.fury.io/rb/yard-doctest) [![Build Status](https://travis-ci.org/p0deje/yard-doctest.png?branch=master)](https://travis-ci.org/p0deje/yard-doctest)
+# yard-doctest [![Gem Version](https://badge.fury.io/rb/yard-doctest.svg)](http://badge.fury.io/rb/yard-doctest) [![Build Status](https://travis-ci.org/p0deje/yard-doctest.png?branch=master)](https://travis-ci.org/p0deje/yard-doctest)
 
 Have you ever wanted to turn your amazing code examples into something that really make sense, is always up-to-date and bullet-proof? Were looking at an amazing [Python doctest](https://docs.python.org/3/library/doctest.html)? Well, look no longer!
 
