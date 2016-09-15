@@ -494,6 +494,32 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
+  Scenario: supports test-name hooks for multiple examples on the same code object
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+
+      YARD::Doctest.before('#flag') do
+        @flag = true
+      end
+
+      YARD::Doctest.before('#flag@Second example for flag') do
+        @flag = false
+      end
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   flag #=> true
+      # @example Second example for flag
+      #   flag #=> false
+      def flag
+        @flag
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
+
   Scenario: can skip tests
     Given a file named "doctest_helper.rb" with:
       """
