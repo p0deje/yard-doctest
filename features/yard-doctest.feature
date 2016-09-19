@@ -124,8 +124,12 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain:
       """
-      Expected: 2
-        Actual: "2"
+      --- expected
+      +++ actual
+      @@ -1 +1,2 @@
+      -2
+      +# encoding: US-ASCII
+      +"2"
       """
 
   Scenario: asserts exceptions
