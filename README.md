@@ -289,6 +289,10 @@ YARD::Doctest.configure do |doctest|
   doctest.after('MyClass#foo') do
     # this will only be called for doctests of `MyClass#foo`
   end
+
+  doctest.before('MyClass#foo@Example one') do
+    # this will only be called for example `Example one` of `MyClass#foo`
+  end
 end
 ```
 
