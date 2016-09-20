@@ -26,7 +26,15 @@ module YARD
 
           return if YARD::Doctest.skips.any? { |skip| this.definition.include?(skip) }
           describe this.definition do
-            register_hooks(this.definition, YARD::Doctest.hooks)
+            # Append this.name to this.definition if YARD's @example tag is followed by
+            # descriptive text, to support hooks for multiple examples per code object.
+            example_name = if this.name.empty?
+              this.definition
+            else
+              "#{this.definition}@#{this.name}"
+            end
+
+            register_hooks(example_name, YARD::Doctest.hooks)
 
             it this.name do
               this.asserts.each do |assert|
@@ -65,12 +73,14 @@ module YARD
         exception.set_backtrace backtrace
       end
 
-      def self.register_hooks(definition, all_hooks)
+
+
+      def self.register_hooks(example_name, all_hooks)
         all_hooks.each do |type, hooks|
           hooks.each do |hook|
             if hook[:test]
               # test-name hooks
-              send(type, &hook[:block]) if definition.include?(hook[:test])
+              send(type, &hook[:block]) if example_name.include?(hook[:test])
             else
               # global hooks
               send(type, &hook[:block])
