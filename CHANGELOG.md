@@ -1,3 +1,7 @@
+## 0.1.7
+
+* Fix a bug when only one of global and test-name hooks is executed for matching test
+
 ## 0.1.6
 
 * Support per-example hooks [#3](https://github.com/p0deje/yard-doctest/pull/3)
