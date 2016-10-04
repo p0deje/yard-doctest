@@ -29,10 +29,10 @@ module YARD
             # Append this.name to this.definition if YARD's @example tag is followed by
             # descriptive text, to support hooks for multiple examples per code object.
             example_name = if this.name.empty?
-              this.definition
-            else
-              "#{this.definition}@#{this.name}"
-            end
+                             this.definition
+                           else
+                             "#{this.definition}@#{this.name}"
+                           end
 
             register_hooks(example_name, YARD::Doctest.hooks)
 
@@ -73,18 +73,12 @@ module YARD
         exception.set_backtrace backtrace
       end
 
-
-
       def self.register_hooks(example_name, all_hooks)
         all_hooks.each do |type, hooks|
-          hooks.each do |hook|
-            if hook[:test]
-              # test-name hooks
-              send(type, &hook[:block]) if example_name.include?(hook[:test])
-            else
-              # global hooks
-              send(type, &hook[:block])
-            end
+          global_hooks = hooks.select { |hook| !hook[:test] }
+          test_hooks = hooks.select { |hook| hook[:test] && example_name.include?(hook[:test]) }
+          __send__(type) do
+            (global_hooks + test_hooks).each { |hook| instance_exec(&hook[:block]) }
           end
         end
       end

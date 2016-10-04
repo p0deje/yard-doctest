@@ -498,6 +498,27 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
+  Scenario: supports global and test-name hooks
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+
+      YARD::Doctest.configure do |doctest|
+        doctest.before { @one = true  }
+        doctest.before('#foo') { @two = true  }
+      end
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   foo #=> true
+      def foo
+        @one && @two
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+
   Scenario: supports test-name hooks for multiple examples on the same code object
     Given a file named "doctest_helper.rb" with:
       """
