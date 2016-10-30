@@ -1,3 +1,7 @@
+## 0.1.8
+
+* Fixed a bug when test was passing even though exception was raised in example
+
 ## 0.1.7
 
 * Fix a bug when only one of global and test-name hooks is executed for matching test

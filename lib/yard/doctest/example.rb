@@ -39,13 +39,10 @@ module YARD
             it this.name do
               this.asserts.each do |assert|
                 expected, actual = assert[:expected], assert[:actual]
-                next if expected.empty?
-
-                begin
-                  assert_equal evaluate(expected), evaluate(actual)
-                rescue Minitest::Assertion => error
-                  add_filepath_to_backtrace(error, this.filepath)
-                  raise error
+                if expected.empty?
+                  evaluate_example(this, actual)
+                else
+                  assert_example(this, expected, actual)
                 end
               end
             end
@@ -54,6 +51,20 @@ module YARD
       end
 
       protected
+
+      def evaluate_example(example, actual)
+        context.eval(actual)
+      rescue StandardError => error
+        add_filepath_to_backtrace(error, example.filepath)
+        raise error
+      end
+
+      def assert_example(example, expected, actual)
+        assert_equal evaluate(expected), evaluate(actual)
+      rescue Minitest::Assertion => error
+        add_filepath_to_backtrace(error, example.filepath)
+        raise error
+      end
 
       def evaluate(code)
         context.eval(code)
@@ -69,7 +80,7 @@ module YARD
         backtrace = exception.backtrace
         line = backtrace.find { |l| l =~ %r{lib/yard/doctest/example} }
         index = backtrace.index(line)
-        backtrace = backtrace.insert(index, filepath)
+        backtrace = backtrace.insert(index + 1, filepath)
         exception.set_backtrace backtrace
       end
 

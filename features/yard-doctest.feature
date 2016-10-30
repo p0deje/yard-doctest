@@ -108,6 +108,28 @@ Feature: yard doctest
     And the output should contain "B.multiply"
     And the output should contain "B#div"
 
+  Scenario: fails if exception is raised
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   foo
+      def foo
+        raise 'Fails with exception'
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the exit status should be 1
+    And the output should contain:
+      """
+      1) Error:
+      #foo#test_0001_:
+      RuntimeError: Fails with exception
+      """
+
   Scenario: asserts using equality
     Given a file named "doctest_helper.rb" with:
       """
