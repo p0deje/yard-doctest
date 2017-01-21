@@ -20,7 +20,7 @@ module YARD
         Class.new(this.class).class_eval do
           require 'minitest/autorun'
 
-          %w[. support].each do |dir|
+          %w[. support spec].each do |dir|
             require "#{dir}/doctest_helper" if File.exist?("#{dir}/doctest_helper.rb")
           end
 
