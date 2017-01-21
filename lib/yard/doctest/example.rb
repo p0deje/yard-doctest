@@ -25,6 +25,13 @@ module YARD
           end
 
           return if YARD::Doctest.skips.any? { |skip| this.definition.include?(skip) }
+
+          begin
+            object_name = this.definition.split(/#|\./).first
+            scope = Object.const_get(object_name) if const_defined?(object_name)
+          rescue NameError
+          end
+
           describe this.definition do
             # Append this.name to this.definition if YARD's @example tag is followed by
             # descriptive text, to support hooks for multiple examples per code object.
@@ -40,9 +47,9 @@ module YARD
               this.asserts.each do |assert|
                 expected, actual = assert[:expected], assert[:actual]
                 if expected.empty?
-                  evaluate_example(this, actual)
+                  evaluate_example(this, actual, scope)
                 else
-                  assert_example(this, expected, actual)
+                  assert_example(this, expected, actual, scope)
                 end
               end
             end
@@ -52,22 +59,22 @@ module YARD
 
       protected
 
-      def evaluate_example(example, actual)
-        context.eval(actual)
+      def evaluate_example(example, actual, bind)
+        (bind || context).send(:eval, actual)
       rescue StandardError => error
         add_filepath_to_backtrace(error, example.filepath)
         raise error
       end
 
-      def assert_example(example, expected, actual)
-        assert_equal evaluate(expected), evaluate(actual)
+      def assert_example(example, expected, actual, bind)
+        assert_equal evaluate(expected, bind), evaluate(actual, bind)
       rescue Minitest::Assertion => error
         add_filepath_to_backtrace(error, example.filepath)
         raise error
       end
 
-      def evaluate(code)
-        context.eval(code)
+      def evaluate(code, bind)
+        (bind || context).send(:eval, code)
       rescue StandardError => error
         "#<#{error.class}: #{error}>"
       end
