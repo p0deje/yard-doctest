@@ -1,3 +1,8 @@
+## 0.1.9
+
+* Allow to have `doctest_helper.rb` in `spec/` directory [#4](https://github.com/p0deje/yard-doctest/pull/4)
+* Allow to use local context in doctest (i.e. not type full path to object) [#5](https://github.com/p0deje/yard-doctest/pull/5)
+
 ## 0.1.8
 
 * Fixed a bug when test was passing even though exception was raised in example
