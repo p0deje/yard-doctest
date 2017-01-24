@@ -78,7 +78,8 @@ class Dog
 
   # @example Dogs never hunt dogs
   #   dog = Dog.new
-  #   dog.can_hunt_dogs? #=> false
+  #   dog.can_hunt_dogs?
+  #   #=> false
   def can_hunt_dogs?
     false
   end
