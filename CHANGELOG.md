@@ -1,3 +1,7 @@
+## 0.1.10
+
+* Properly share local context between assertions when scoped to class (#6)
+
 ## 0.1.9
 
 * Allow to have `doctest_helper.rb` in `spec/` directory [#4](https://github.com/p0deje/yard-doctest/pull/4)
