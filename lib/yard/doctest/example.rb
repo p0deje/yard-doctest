@@ -60,23 +60,30 @@ module YARD
       protected
 
       def evaluate_example(example, actual, bind)
-        (bind || context).send(:eval, actual)
+        evaluate(actual, bind)
       rescue StandardError => error
         add_filepath_to_backtrace(error, example.filepath)
         raise error
       end
 
       def assert_example(example, expected, actual, bind)
-        assert_equal evaluate(expected, bind), evaluate(actual, bind)
+        assert_equal(evaluate_with_assertion(expected, bind),
+                     evaluate_with_assertion(actual, bind))
       rescue Minitest::Assertion => error
         add_filepath_to_backtrace(error, example.filepath)
         raise error
       end
 
-      def evaluate(code, bind)
-        (bind || context).send(:eval, code)
+      def evaluate_with_assertion(code, bind)
+        evaluate(code, bind)
       rescue StandardError => error
         "#<#{error.class}: #{error}>"
+      end
+
+      def evaluate(code, bind)
+        context.eval code
+      rescue NameError
+        bind ? bind.__send__(:eval, code) : raise
       end
 
       def context

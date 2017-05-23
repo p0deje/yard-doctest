@@ -442,9 +442,18 @@ Feature: yard doctest
       def sum(one, two)
         one + two
       end
+
+      module App
+        # @example
+        #   src = {foo: 'bar'}
+        #   src[:foo] #=> 'bar'
+        #   src[:foo] #=> 'bar'
+        def foo
+        end
+      end
       """
     When I run `bundle exec yard doctest`
-    Then the output should contain "1 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
+    Then the output should contain "2 runs, 4 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: does not share binding between examples
     Given a file named "doctest_helper.rb" with:
