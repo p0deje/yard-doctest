@@ -1,3 +1,7 @@
+## 0.1.11
+
+* Remove constants defined during test execution for better isolation.
+
 ## 0.1.10
 
 * Properly share local context between assertions when scoped to class (#6)
