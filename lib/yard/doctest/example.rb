@@ -44,6 +44,7 @@ module YARD
             register_hooks(example_name, YARD::Doctest.hooks)
 
             it this.name do
+              constants = Object.constants
               this.asserts.each do |assert|
                 expected, actual = assert[:expected], assert[:actual]
                 if expected.empty?
@@ -52,6 +53,7 @@ module YARD
                   assert_example(this, expected, actual, scope)
                 end
               end
+              clear_extra_constants(constants)
             end
           end
         end
@@ -96,6 +98,12 @@ module YARD
         index = backtrace.index(line)
         backtrace = backtrace.insert(index + 1, filepath)
         exception.set_backtrace backtrace
+      end
+
+      def clear_extra_constants(constants)
+        (Object.constants - constants).each do |constant|
+          Object.__send__(:remove_const, constant)
+        end
       end
 
       def self.register_hooks(example_name, all_hooks)

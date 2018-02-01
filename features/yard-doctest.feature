@@ -624,3 +624,25 @@ Feature: yard doctest
       """
     When I run `bundle exec yard doctest`
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+
+  Scenario: isolates constants per test
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   ::FOO = 123
+      #   ::FOO #=> 123
+      #   ::BAR #=> raise NameError, 'uninitialized constant BAR'
+      #
+      # @example
+      #   ::BAR = 123
+      #   ::BAR #=> 123
+      #   ::FOO #=> raise NameError, 'uninitialized constant FOO'
+      class App
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "2 runs, 4 assertions, 0 failures, 0 errors, 0 skips"
