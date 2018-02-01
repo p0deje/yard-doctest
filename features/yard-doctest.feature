@@ -606,21 +606,21 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain "0 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
 
-    Scenario: allow binding to local context
-      Given a file named "doctest_helper.rb" with:
-        """
-        require 'app/app'
-        """
-      And a file named "app/app.rb" with:
-        """
-        class App
-          # @example
-          #   a, b = 1, 2
-          #   sum(a, b) #=> 3
-          def self.sum(one, two)
-            one + two
-          end
+  Scenario: allows binding to local context
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      class App
+        # @example
+        #   a, b = 1, 2
+        #   sum(a, b) #=> 3
+        def self.sum(one, two)
+          one + two
         end
-        """
-      When I run `bundle exec yard doctest`
-      Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
