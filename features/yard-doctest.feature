@@ -597,7 +597,7 @@ Feature: yard doctest
 
       class A
         # @example
-        #   A.foo => true
+        #   A.foo #=> true
         def self.foo
           true
         end
@@ -646,3 +646,26 @@ Feature: yard doctest
       """
     When I run `bundle exec yard doctest`
     Then the output should contain "2 runs, 4 assertions, 0 failures, 0 errors, 0 skips"
+
+  Scenario: allows to run a single test
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      class A
+        # @example First
+        #   A.foo #=> true
+        #
+        # @example Second
+        #   A.foo #=> false
+        def self.foo
+          true
+        end
+      end
+      """
+    When I run `bundle exec yard doctest -v --name=/First/`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+    When I run `bundle exec yard doctest -v --name=/Second/`
+    Then the output should contain "1 runs, 1 assertions, 1 failures, 0 errors, 0 skips"
