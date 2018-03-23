@@ -44,7 +44,8 @@ module YARD
             register_hooks(example_name, YARD::Doctest.hooks)
 
             it this.name do
-              constants = Object.constants
+              global_constants = Object.constants
+              scope_constants = scope.constants if scope
               this.asserts.each do |assert|
                 expected, actual = assert[:expected], assert[:actual]
                 if expected.empty?
@@ -53,7 +54,8 @@ module YARD
                   assert_example(this, expected, actual, scope)
                 end
               end
-              clear_extra_constants(constants)
+              clear_extra_constants(Object, global_constants)
+              clear_extra_constants(scope, scope_constants) if scope
             end
           end
         end
@@ -112,9 +114,9 @@ module YARD
         exception.set_backtrace backtrace
       end
 
-      def clear_extra_constants(constants)
-        (Object.constants - constants).each do |constant|
-          Object.__send__(:remove_const, constant)
+      def clear_extra_constants(scope, constants)
+        (scope.constants - constants).each do |constant|
+          scope.__send__(:remove_const, constant)
         end
       end
 

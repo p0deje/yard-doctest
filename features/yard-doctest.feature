@@ -657,16 +657,22 @@ Feature: yard doctest
       #   ::FOO = 123
       #   ::FOO #=> 123
       #   ::BAR #=> raise NameError, 'uninitialized constant BAR'
+      #   FOO = 456
+      #   FOO #=> 456
+      #   BAR #=> raise NameError, 'uninitialized constant App::BAR'
       #
       # @example
       #   ::BAR = 123
       #   ::BAR #=> 123
       #   ::FOO #=> raise NameError, 'uninitialized constant FOO'
+      #   BAR = 123
+      #   BAR #=> 123
+      #   FOO #=> raise NameError, 'uninitialized constant App::FOO'
       class App
       end
       """
     When I run `bundle exec yard doctest`
-    Then the output should contain "2 runs, 4 assertions, 0 failures, 0 errors, 0 skips"
+    Then the output should contain "2 runs, 8 assertions, 0 failures, 0 errors, 0 skips"
 
   Scenario: allows to run a single test
     Given a file named "doctest_helper.rb" with:
