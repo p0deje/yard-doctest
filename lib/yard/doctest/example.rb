@@ -83,18 +83,11 @@ module YARD
       end
 
       def evaluate(code, bind)
-        context.eval code
-      rescue NameError => error
-        # NoMethodError extends NameError so we need to re-raise
-        if error.is_a?(NoMethodError) || !bind
-          raise
-        else
-          bind.__send__(:eval, code)
-        end
+        context(bind).eval(code)
       end
 
-      def context
-        @binding ||= binding
+      def context(bind)
+        @context ||= (bind ? bind.class_eval('binding', __FILE__, __LINE__) : binding)
       end
 
       def add_filepath_to_backtrace(exception, filepath)
