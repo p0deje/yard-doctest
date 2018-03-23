@@ -84,8 +84,13 @@ module YARD
 
       def evaluate(code, bind)
         context.eval code
-      rescue NameError
-        bind ? bind.__send__(:eval, code) : raise
+      rescue NameError => error
+        # NoMethodError extends NameError so we need to re-raise
+        if error.is_a?(NoMethodError) || !bind
+          raise
+        else
+          bind.__send__(:eval, code)
+        end
       end
 
       def context
