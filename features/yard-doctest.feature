@@ -625,6 +625,27 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
 
+  Scenario: shares instance variables in local context binding
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+
+      YARD::Doctest.before do
+        @flag = true
+      end
+      """
+    And a file named "app/app.rb" with:
+      """
+      class App
+        # @example
+        #   @flag #=> true
+        def self.foo
+        end
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+
   Scenario: isolates constants per test
     Given a file named "doctest_helper.rb" with:
       """

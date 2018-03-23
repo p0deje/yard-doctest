@@ -87,7 +87,21 @@ module YARD
       end
 
       def context(bind)
-        @context ||= (bind ? bind.class_eval('binding', __FILE__, __LINE__) : binding)
+        @context ||= begin
+          if bind
+            context = bind.class_eval('binding', __FILE__, __LINE__)
+            # Oh my god, what is happening here?
+            # We need to transplant instance variables from the current binding.
+            instance_variables.each do |instance_variable_name|
+              local_variable_name = "__yard_doctest__#{instance_variable_name.to_s.delete('@')}"
+              context.local_variable_set(local_variable_name, instance_variable_get(instance_variable_name))
+              context.eval("#{instance_variable_name} = #{local_variable_name}")
+            end
+            context
+          else
+            binding
+          end
+        end
       end
 
       def add_filepath_to_backtrace(exception, filepath)
