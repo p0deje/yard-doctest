@@ -1,3 +1,7 @@
+## 0.1.12
+
+* Reworked the construction of context where examples are evaluated.
+
 ## 0.1.11
 
 * Remove constants defined during test execution for better isolation.
