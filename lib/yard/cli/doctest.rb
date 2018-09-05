@@ -17,7 +17,8 @@ module YARD
         files = args.select { |arg| arg !~ /^-/ }
 
         files = parse_files(files)
-        examples = parse_examples(files)
+        exclude = extract_exclude_from_yardopts
+        examples = parse_examples(files, exclude)
 
         add_pwd_to_path
 
@@ -44,6 +45,21 @@ module YARD
         YARD.parse(files)
         registry = Registry.load_all
         registry.all.map { |object| object.tags(:example) }.flatten
+      end
+
+      def extract_exclude_from_yardopts(file = '.yardopts')
+        return [] unless File.exist? file
+
+        exclude = []
+
+        opts = File.read_binary(file).shell_split
+        while opts.any?
+          opt = opts.shift
+          next unless opt == '--exclude'
+          exclude << opts.shift
+        end
+
+        exclude.compact
       end
 
       def generate_tests(examples)
