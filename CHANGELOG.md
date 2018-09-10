@@ -1,3 +1,7 @@
+## 0.1.13
+
+* Ignore files excluded in .yardopts (#7)
+
 ## 0.1.12
 
 * Reworked the construction of context where examples are evaluated.
