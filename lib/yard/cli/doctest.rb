@@ -41,9 +41,20 @@ module YARD
       end
 
       def parse_examples(files)
-        YARD.parse(files)
+        YARD.parse(files, excluded_files)
         registry = Registry.load_all
         registry.all.map { |object| object.tags(:example) }.flatten
+      end
+
+      def excluded_files
+        excluded = []
+        args = YARD::Config.with_yardopts { YARD::Config.arguments.dup }
+        args.each_with_index do |arg, i|
+          next unless arg == '--exclude'
+          excluded << args[i + 1]
+        end
+
+        excluded
       end
 
       def generate_tests(examples)

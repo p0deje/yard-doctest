@@ -696,3 +696,32 @@ Feature: yard doctest
     Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
     When I run `bundle exec yard doctest -v --name=/Second/`
     Then the output should contain "1 runs, 1 assertions, 1 failures, 0 errors, 0 skips"
+
+  Scenario: ignores files excluded in .yardopts
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      require 'lib/lib'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   foo
+      def foo
+        "I should be run"
+      end
+      """
+    And a file named "lib/lib.rb" with:
+      """
+      # @example
+      #   bar
+      def bar
+        raise "I should be ignored"
+      end
+      """
+    And a file named ".yardopts" with:
+      """
+      --exclude lib/lib.rb
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
