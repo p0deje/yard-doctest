@@ -87,12 +87,12 @@ end
 
 You can run tests for all the examples you've documented.
 
-First of all, you need to tell YARD to automatically load `yard-doctest` (as well as other plugins):
+First of all, you need to tell YARD to automatically load `yard-doctest` (as well as other plugins).
+To do so, add yard-doctest as an automatically loaded plugin in your `.yardops`:
 
 ```bash
-$ bundle exec yard config load_plugins true
-# if you don't want to load other plugins
-$ bundle exec yard config -a autoload_plugins yard-doctest
+# .yardopts
+--plugin yard-doctest
 ```
 
 Next, you'll need to create test helper, which will be required before each of your test. Think about it as `spec_helper.rb` in RSpec or `env.rb` in Cucumber. You should require everything necessary for your examples to run there.
