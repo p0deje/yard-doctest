@@ -1,4 +1,4 @@
-## master
+## 0.1.14
 
 * Allow to use without Rake installed. If you want to use Rake task, please add
   `require 'yard/doctest/rake'` to your Rakefile (#8)
