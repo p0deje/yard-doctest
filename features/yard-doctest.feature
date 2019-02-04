@@ -5,6 +5,15 @@ Feature: yard doctest
   I want to automatically parse YARD's @example tags
   And use them as tests
   Just like doctest in Python
+  
+  Background:
+    # YARD stopped auto-loading all plugins at 0.6.2, so anything newer needs
+    # the plugin explicitly loaded. A simple way to do this is to always have
+    # a `.yardopts` that loads `yard-doctest`.
+    Given a file named ".yardopts" with:
+      """
+      --plugin yard-doctest
+      """
 
   Scenario: adds new command to yard
     When I run `bundle exec yard --help`
@@ -721,6 +730,7 @@ Feature: yard doctest
       """
     And a file named ".yardopts" with:
       """
+      --plugin yard-doctest
       --exclude lib/lib.rb
       """
     When I run `bundle exec yard doctest`
