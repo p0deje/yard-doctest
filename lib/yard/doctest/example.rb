@@ -26,12 +26,6 @@ module YARD
 
           return if YARD::Doctest.skips.any? { |skip| this.definition.include?(skip) }
 
-          begin
-            object_name = this.definition.split(/#|\./).first
-            scope = Object.const_get(object_name) if const_defined?(object_name)
-          rescue NameError
-          end
-
           describe this.definition do
             # Append this.name to this.definition if YARD's @example tag is followed by
             # descriptive text, to support hooks for multiple examples per code object.
@@ -41,9 +35,15 @@ module YARD
                              "#{this.definition}@#{this.name}"
                            end
 
-            register_hooks(example_name, YARD::Doctest.hooks)
+            register_hooks(example_name, YARD::Doctest.hooks, this)
 
             it this.name do
+              begin
+                object_name = this.definition.split(/#|\./).first
+                scope = Object.const_get(object_name) if self.class.const_defined?(object_name)
+              rescue NameError
+              end
+
               global_constants = Object.constants
               scope_constants = scope.constants if scope
               this.asserts.each do |assert|
@@ -140,12 +140,19 @@ module YARD
         end
       end
 
-      def self.register_hooks(example_name, all_hooks)
-        all_hooks.each do |type, hooks|
-          global_hooks = hooks.select { |hook| !hook[:test] }
-          test_hooks = hooks.select { |hook| hook[:test] && example_name.include?(hook[:test]) }
-          __send__(type) do
-            (global_hooks + test_hooks).each { |hook| instance_exec(&hook[:block]) }
+      class << self
+        protected
+
+        # @param [String] example_name The name of the example.
+        # @param [Hash<Symbol, Array<Hash<(test: String, block: Proc)>>] all_hooks
+        # @param [Example] example
+        def register_hooks(example_name, all_hooks, example)
+          all_hooks.each do |type, hooks|
+            global_hooks = hooks.reject { |hook| hook[:test] }
+            test_hooks   = hooks.select { |hook| hook[:test] && example_name.include?(hook[:test]) }
+            __send__(type) do
+              (global_hooks + test_hooks).each { |hook| instance_exec(example, &hook[:block]) }
+            end
           end
         end
       end

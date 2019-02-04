@@ -590,6 +590,26 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain "2 runs, 2 assertions, 0 failures, 0 errors, 0 skips"
 
+  Scenario: passes example to hooks to allow for inspection
+    Given a file named "doctest_helper.rb" with:
+      """
+      YARD::Doctest.before do |example|
+        require example.filepath.split(':').first
+      end
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   App.foo #=> 'bar'
+      class App
+        def self.foo
+          'bar'
+        end
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+
   Scenario: can skip tests
     Given a file named "doctest_helper.rb" with:
       """
