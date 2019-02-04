@@ -1,4 +1,2 @@
 rvm:
   - 2.4.3
-
-before_script: bundle exec yard config -a autoload_plugins yard-doctest
