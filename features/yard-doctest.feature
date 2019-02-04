@@ -367,7 +367,7 @@ Feature: yard doctest
       """
     And a file named "Rakefile" with:
       """
-      require 'yard-doctest'
+      require 'yard/doctest/rake'
       YARD::Doctest::RakeTask.new do |task|
         task.doctest_opts = %w[-v]
         task.pattern = 'app/**/*.rb'

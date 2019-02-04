@@ -1,3 +1,8 @@
+## master
+
+* Allow to use without Rake installed. If you want to use Rake task, please add
+  `require 'yard/doctest/rake'` to your Rakefile (#8)
+
 ## 0.1.13
 
 * Ignore files excluded in .yardopts (#7)
