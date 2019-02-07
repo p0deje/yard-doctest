@@ -71,8 +71,16 @@ module YARD
       end
 
       def assert_example(example, expected, actual, bind)
-        assert_equal(evaluate_with_assertion(expected, bind),
-                     evaluate_with_assertion(actual, bind))
+        expected = evaluate_with_assertion(expected, bind)
+        actual = evaluate_with_assertion(actual, bind)
+
+        if both_are_errors?(expected, actual)
+          assert_equal("#<#{expected.class}: #{expected}>", "#<#{actual.class}: #{actual}>")
+        elsif (error = only_one_is_error?(expected, actual))
+          raise error
+        else
+          assert_equal(expected, actual)
+        end
       rescue Minitest::Assertion => error
         add_filepath_to_backtrace(error, example.filepath)
         raise error
@@ -81,7 +89,7 @@ module YARD
       def evaluate_with_assertion(code, bind)
         evaluate(code, bind)
       rescue StandardError => error
-        "#<#{error.class}: #{error}>"
+        error
       end
 
       def evaluate(code, bind)
@@ -103,6 +111,18 @@ module YARD
           else
             binding
           end
+        end
+      end
+
+      def both_are_errors?(expected, actual)
+        expected.is_a?(StandardError) && actual.is_a?(StandardError)
+      end
+
+      def only_one_is_error?(expected, actual)
+        if expected.is_a?(StandardError) && !actual.is_a?(StandardError)
+          expected
+        elsif !expected.is_a?(StandardError) && actual.is_a?(StandardError)
+          actual
         end
       end
 

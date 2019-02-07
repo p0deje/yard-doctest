@@ -5,7 +5,7 @@ Feature: yard doctest
   I want to automatically parse YARD's @example tags
   And use them as tests
   Just like doctest in Python
-  
+
   Background:
     # YARD stopped auto-loading all plugins at 0.6.2, so anything newer needs
     # the plugin explicitly loaded. A simple way to do this is to always have
@@ -137,6 +137,10 @@ Feature: yard doctest
       1) Error:
       #foo#test_0001_:
       RuntimeError: Fails with exception
+      """
+    And the output should contain:
+      """
+      app/app.rb:4:in `foo'
       """
 
   Scenario: asserts using equality
@@ -735,3 +739,29 @@ Feature: yard doctest
       """
     When I run `bundle exec yard doctest`
     Then the output should contain "1 runs, 0 assertions, 0 failures, 0 errors, 0 skips"
+
+  Scenario: shows exception when assert raises one
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   foo #=> 1
+      def foo
+        raise 'Fails with exception'
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the exit status should be 1
+    And the output should contain:
+      """
+      1) Error:
+      #foo#test_0001_:
+      RuntimeError: Fails with exception
+      """
+    And the output should contain:
+      """
+      app/app.rb:4:in `foo'
+      """
