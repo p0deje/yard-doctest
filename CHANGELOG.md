@@ -1,3 +1,7 @@
+## 0.1.16
+
+* Pass example instance to hooks to allow for its inspection (thanks @nrser)
+
 ## 0.1.15
 
 * Fix an issue when exception is swallowed in assertion phase
