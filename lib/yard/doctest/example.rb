@@ -78,6 +78,8 @@ module YARD
           assert_equal("#<#{expected.class}: #{expected}>", "#<#{actual.class}: #{actual}>")
         elsif (error = only_one_is_error?(expected, actual))
           raise error
+        elsif expected.nil?
+          assert_nil(actual)
         else
           assert_equal(expected, actual)
         end
