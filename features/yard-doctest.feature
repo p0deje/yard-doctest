@@ -785,3 +785,26 @@ Feature: yard doctest
       """
       app/app.rb:4:in `foo'
       """
+  
+  Scenario: Expecting `nil` does not issue deprecation warning
+    
+    See https://github.com/p0deje/yard-doctest/issues/12
+    
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'lib/assert_nil'
+      """
+    And a file named "lib/assert_nil.rb" with:
+      """
+      # @example
+      #   foo #=> nil
+      def foo
+        nil
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the exit status should be 0
+    And the output should not contain:
+      """
+      DEPRECATED
+      """
