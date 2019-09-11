@@ -786,3 +786,17 @@ Feature: yard doctest
       """
       app/app.rb:4:in `foo'
       """
+
+  Scenario: handles a proc successfully
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   MyClass.call #=> 1
+      MyClass = lambda { 1 }
+      """
+      When I run `bundle exec yard doctest`
+      Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
