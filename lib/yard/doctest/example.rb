@@ -45,7 +45,7 @@ module YARD
               end
 
               global_constants = Object.constants
-              scope_constants = scope.constants if scope
+              scope_constants = scope.constants if scope && scope.respond_to?(:constants)
               this.asserts.each do |assert|
                 expected, actual = assert[:expected], assert[:actual]
                 if expected.empty?
@@ -55,7 +55,7 @@ module YARD
                 end
               end
               clear_extra_constants(Object, global_constants)
-              clear_extra_constants(scope, scope_constants) if scope
+              clear_extra_constants(scope, scope_constants) if scope && scope.respond_to?(:constants)
             end
           end
         end
