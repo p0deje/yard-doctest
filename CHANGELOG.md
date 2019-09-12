@@ -1,3 +1,7 @@
+## 0.1.17
+
+* Fixed an issue when procs would fail to be tested (thanks @jkantarek)
+
 ## 0.1.16
 
 * Pass example instance to hooks to allow for its inspection (thanks @nrser)
