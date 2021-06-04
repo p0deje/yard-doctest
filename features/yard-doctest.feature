@@ -161,9 +161,10 @@ Feature: yard doctest
       """
       --- expected
       +++ actual
-      @@ -1 +1,2 @@
+      @@ -1 +1,3 @@
       -2
       +# encoding: US-ASCII
+      +#    valid: true
       +"2"
       """
 
