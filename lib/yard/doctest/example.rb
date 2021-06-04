@@ -81,7 +81,7 @@ module YARD
         elsif expected.nil?
           assert_nil(actual)
         else
-          assert_equal(expected, actual)
+          assert_operator(expected, '===', actual)
         end
       rescue Minitest::Assertion => error
         add_filepath_to_backtrace(error, example.filepath)

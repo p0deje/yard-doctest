@@ -159,12 +159,8 @@ Feature: yard doctest
     When I run `bundle exec yard doctest`
     Then the output should contain:
       """
-      --- expected
-      +++ actual
-      @@ -1 +1,2 @@
-      -2
-      +# encoding: US-ASCII
-      +"2"
+      Expected 2 to be === # encoding: US-ASCII
+      "2".
       """
 
   Scenario: asserts exceptions
@@ -213,6 +209,27 @@ Feature: yard doctest
       | 10    |
       | -1    |
       | 1.0   |
+
+  Scenario Outline: properly handles case equality
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   foo #=> <value>
+      def foo
+        'string'
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+    Examples:
+      | value    |
+      | 'string' |
+      | /string/ |
+      | String   |
 
   Scenario: handles multiple @example tags
     Given a file named "doctest_helper.rb" with:
