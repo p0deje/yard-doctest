@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'yard'
 require 'minitest'
 require 'minitest/spec'

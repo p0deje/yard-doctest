@@ -1,6 +1,8 @@
-require 'bundler/gem_tasks'
+# frozen_string_literal: true
 
+require 'bundler/gem_tasks'
 require 'cucumber/rake/task'
+
 Cucumber::Rake::Task.new do |task|
   task.cucumber_opts = '-f progress features'
 end
