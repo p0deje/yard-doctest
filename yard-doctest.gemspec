@@ -12,9 +12,11 @@ Gem::Specification.new do |spec|
   spec.homepage     = 'https://github.com/p0deje/yard-doctest'
   spec.license      = 'MIT'
 
-  spec.files        = `git ls-files -z`.split("\x0")
-  spec.test_files   = spec.files.grep(/^features\//)
-  spec.require_path = 'lib'
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
+  end
+
+  spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'yard'
   spec.add_runtime_dependency 'minitest'
