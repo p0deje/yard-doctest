@@ -822,3 +822,26 @@ Feature: yard doctest
       """
       When I run `bundle exec yard doctest`
       Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+
+  Scenario: properly supports calculating coverage
+    Given a file named "doctest_helper.rb" with:
+      """
+      require 'simplecov'
+
+      SimpleCov.start
+
+      require 'app/app'
+      """
+    And a file named "app/app.rb" with:
+      """
+      # @example
+      #   MyClass.call #=> 1
+      class MyClass
+        def self.call
+          1
+        end
+      end
+      """
+    When I run `bundle exec yard doctest`
+    Then the output should contain "1 runs, 1 assertions, 0 failures, 0 errors, 0 skips"
+    And the output should contain "3 / 3 LOC (100.0%) covered."
