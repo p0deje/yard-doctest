@@ -22,6 +22,7 @@ module YARD
         add_pwd_to_path
 
         generate_tests(examples)
+        run_tests
       end
 
       private
@@ -84,6 +85,10 @@ module YARD
           spec.asserts = asserts
           spec.generate
         end
+      end
+
+      def run_tests
+        Minitest.autorun
       end
 
       def add_pwd_to_path
