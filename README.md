@@ -96,11 +96,11 @@ To do so, add yard-doctest as an automatically loaded plugin in your `.yardops`:
 --plugin yard-doctest
 ```
 
-Next, you'll need to create test helper, which will be required before each of your test. Think about it as `spec_helper.rb` in RSpec or `env.rb` in Cucumber. You should require everything necessary for your examples to run there.
+Next, you'll need to create test helper, which will be required before each of your test. Think about it as `spec_helper.rb` in RSpec, `test_helper.rb` in Minitest, or `env.rb` in Cucumber. You should require everything necessary for your examples to run there.
 
 ```bash
 $ touch doctest_helper.rb
-# or move it into either the `support` or `spec` directory
+# or move it into the `support`, `spec`, or `test` directory
 ```
 
 ```ruby

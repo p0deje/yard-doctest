@@ -18,7 +18,7 @@ module YARD
         this = self
 
         Class.new(this.class).class_eval do
-          %w[. support spec].each do |dir|
+          %w[. support spec test].each do |dir|
             require "#{dir}/doctest_helper" if File.exist?("#{dir}/doctest_helper.rb")
           end
 

@@ -462,6 +462,7 @@ Feature: yard doctest
       | .         |
       | support   |
       | spec      |
+      | test      |
 
   Scenario: shares binding between asserts
     Given a file named "doctest_helper.rb" with:
