@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'yard'
 require 'minitest'
 require 'minitest/spec'
 
-require 'yard/cli/doctest'
-require 'yard/doctest/example'
-require 'yard/doctest/version'
+require_relative 'yard/cli/doctest'
+require_relative 'yard/doctest/example'
+require_relative 'yard/doctest/version'
 
 module YARD
   module Doctest
